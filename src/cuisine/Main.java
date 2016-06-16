@@ -6,7 +6,7 @@ public class Main {
 		
 		Globals global = new Globals();
 		global.init();
-
+		System.out.println("fin");
 	}
 
 }

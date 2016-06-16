@@ -6,8 +6,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -17,6 +19,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 public class Globals {
+	private static List<String> stopwords = Arrays.asList("plain", "large", "small", "to", "or", "s", "lb", "n", "g");
+	
 	public static List<Cuisine> TEST_CUISINE;
 	public static List<Cuisine> TRAIN_CUISINE;
 	
@@ -40,6 +44,8 @@ public class Globals {
 		}.getType();
 		Gson gson = new Gson();
 		TEST_CUISINE = gson.fromJson(jsonContent, listOfA);
+		filterRecipes(TEST_CUISINE);
+		
 		
 	}
 	
@@ -59,6 +65,47 @@ public class Globals {
 		}
 	}
 	
+	private static void filterRecipes(List<Cuisine> cuisines) {
+		for (Cuisine cuisine : cuisines) {
+			cuisine.setIngredients(filterIngredients(cuisine.getIngredients()));
+		}
+	}
+	
+	private static List<String> filterIngredients(List<String> toBeFiltered){
+		List<String> result = new ArrayList<String>();
+		for (String ingredient : toBeFiltered) {
+			ingredient = ingredient.toLowerCase();
+			ingredient = removeSymbols(ingredient);
+			List<String> separateWords = Arrays.asList(ingredient.split(" "));
+			for (String word : separateWords) {
+				word = word.replaceAll("\\s*", "");
+				result.add(word);
+			}
+			
+		}
+		return result;
+	}
+	
+	private static String removeSymbols(String ingredient) {
+		ingredient = ingredient.replace("-", " ");
+		ingredient = ingredient.replace("&", " ");
+		ingredient = ingredient.replace("'", " ");
+		ingredient = ingredient.replace("\"", " ");
+		ingredient = ingredient.replace("%", " ");
+		ingredient = ingredient.replace("!", " ");
+		ingredient = ingredient.replace("(", " ");
+		ingredient = ingredient.replace(")", " ");
+		ingredient = ingredient.replace("/", " ");
+		ingredient = ingredient.replace(",", " ");
+		ingredient = ingredient.replace(".", " ");
+		ingredient = ingredient.replace("\u2122", " ");
+		ingredient = ingredient.replace("\u00AE", " ");
+		ingredient = ingredient.replace("\u2019", " ");
+		ingredient = ingredient.replaceAll("\\d","");
+		return ingredient;
+		
+	}
+	
 	private static void initTrainCuisines() throws Exception {
 		
 		System.out.println("Read Train Cuisine");
@@ -69,6 +116,7 @@ public class Globals {
 		TRAIN_CUISINE = gson.fromJson(jsonContent, listOfA);
 		INGREDIENTS_PER_CUISINE = new HashMap<String, List<String>>();
 		CUISINES = new HashSet<String>();
+		filterRecipes(TRAIN_CUISINE);
 		
 		
 		for (Cuisine cuisine : TRAIN_CUISINE) {
@@ -86,9 +134,4 @@ public class Globals {
 			
 		}
 	}
-	
-	
-	
-
-	
 }

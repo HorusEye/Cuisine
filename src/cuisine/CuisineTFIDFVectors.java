@@ -12,10 +12,9 @@ public class CuisineTFIDFVectors {
 		vector = new HashMap<String, Map<String, Double>>();
 		for(String cuisine : Globals.CUISINES){
 			Map<String, Double> tfidf = new HashMap<String, Double>();
-//			for(String ingredient : Globals.IngredientsPerCuisine.get(cuisine)){
-//				
-//				tfidf.put(ingredient, TfIdfCalculator.tfIdf(doc, docs, term))
-//			}
+			for(String ingredient : Globals.INGREDIENTS_PER_CUISINE.get(cuisine)){
+				tfidf.put(ingredient, TfIdfCalculator.tfIdf(doc, docs, ingredient));
+			}
 		}
 		
 		return null;
