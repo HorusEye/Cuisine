@@ -18,9 +18,13 @@ public class SubmissionGenerator {
 		
 		bw.append("id,cuisine");
 		
+		CuisineTFIDFVectors result = new CuisineTFIDFVectors();
+		
 		for(Cuisine cuisine : Globals.TEST_CUISINE) {
 			bw.newLine();
-			bw.append(cuisine.getId() + "," + cuisine.getCuisine());
+			result.calculateVectors(cuisine.getIngredients());
+			String cuisineName =  result.getBestCuisine();
+			bw.append(cuisine.getId() + "," + cuisineName);
 		}
 		
 		bw.close();

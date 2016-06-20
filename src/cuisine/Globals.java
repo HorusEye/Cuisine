@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.lang.reflect.Type;
+import java.security.AllPermission;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -12,6 +14,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -26,8 +29,14 @@ public class Globals {
 	
 	//contains all ingredients per given cuisine
 	public static Map<String, List<String>> INGREDIENTS_PER_CUISINE;
-	public List<String> ALL_INGREDIENTS;
+	//distinct ingredients and cuisines in train set
+	public static Set<String> ALL_INGREDIENTS;
 	public static Set<String> CUISINES;
+	
+	//all duplicate ingredients for all cuisines
+	public static List<List<String>> INGREDIENTS_FOR_ALL_CUISINES;
+	
+	public static Map<String,Map<String, Integer>> INGREDIENTS_PER_CUISINE_COUNT;
 	
 
 	public static void init() throws Exception {
@@ -113,9 +122,17 @@ public class Globals {
 		Type listOfA = new TypeToken<List<Cuisine>>() {
 		}.getType();
 		Gson gson = new Gson();
+		
 		TRAIN_CUISINE = gson.fromJson(jsonContent, listOfA);
 		INGREDIENTS_PER_CUISINE = new HashMap<String, List<String>>();
+		
+		ALL_INGREDIENTS = new HashSet<String>();
 		CUISINES = new HashSet<String>();
+		INGREDIENTS_FOR_ALL_CUISINES = new ArrayList<List<String>>();
+		INGREDIENTS_PER_CUISINE_COUNT = new HashMap<String, Map<String, Integer>>();
+		
+		
+		
 		filterRecipes(TRAIN_CUISINE);
 		
 		
@@ -123,15 +140,54 @@ public class Globals {
 			
 			List<String> ingredients = new ArrayList<String>();
 			ingredients.addAll(cuisine.getIngredients());
+			String cuisineName = cuisine.getCuisine();;
 
-			if(!INGREDIENTS_PER_CUISINE.containsKey(cuisine.getCuisine().toLowerCase().trim())){
-				INGREDIENTS_PER_CUISINE.put(cuisine.getCuisine().toLowerCase().trim(), ingredients);
+			if(!INGREDIENTS_PER_CUISINE.containsKey(cuisineName)){
+				INGREDIENTS_PER_CUISINE.put(cuisineName, ingredients);
 			}else{
-				INGREDIENTS_PER_CUISINE.get(cuisine.getCuisine().toLowerCase().trim()).addAll(ingredients);
+				INGREDIENTS_PER_CUISINE.get(cuisineName).addAll(ingredients);
+			}
+			
+			if(!INGREDIENTS_PER_CUISINE_COUNT.containsKey(cuisine)){
+				INGREDIENTS_PER_CUISINE_COUNT.put(cuisineName, new HashMap<String, Integer>());
+			}
+			
+			for(String ingredient : ingredients){
+				if(INGREDIENTS_PER_CUISINE_COUNT.containsKey(ingredient)){
+					INGREDIENTS_PER_CUISINE_COUNT.get(cuisineName).put(ingredient,INGREDIENTS_PER_CUISINE_COUNT.get(cuisineName).get(ingredient) + 1);
+				}else{
+					
+					INGREDIENTS_PER_CUISINE_COUNT.get(cuisineName).put(ingredient,1);
+				}
 			}
 			
 			CUISINES.add(cuisine.getCuisine().toLowerCase().trim());
+			ALL_INGREDIENTS.addAll(ingredients);
+			INGREDIENTS_FOR_ALL_CUISINES.add(ingredients);
+			
 			
 		}
+		
+		
 	}
+	
+	public void printLists(){
+		System.out.println("Cuisines");
+//		for(String cuisine : CUISINES){
+//			System.out.print(cuisine + ", ");
+//		}
+		
+//		System.out.println("Ingredients");
+//		for(String ing : ALL_INGREDIENTS){
+//			System.out.print(ing + ", ");
+//		}
+//		
+		System.out.println("ING/CUISINE");
+		for(Entry<String, List<String>> entry : INGREDIENTS_PER_CUISINE.entrySet()){
+			System.out.println(entry.getKey() + ": " + entry.getValue().toString());
+		}
+		
+		
+	}
+	
 }

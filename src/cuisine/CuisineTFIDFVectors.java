@@ -1,23 +1,40 @@
 package cuisine;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
 public class CuisineTFIDFVectors {
 
-	private Map<String, Map<String, Double>> vector;
+	private String bestCuisine;
+	private double bestResult;
 	
-	public  Map<String, Map<String, Double>> calculateVector(){
-		vector = new HashMap<String, Map<String, Double>>();
+	
+	public  void calculateVectors(List<String> terms){
+		bestResult = 0;
+		double temp = 0;
+		
 		for(String cuisine : Globals.CUISINES){
-			Map<String, Double> tfidf = new HashMap<String, Double>();
-			for(String ingredient : Globals.INGREDIENTS_PER_CUISINE.get(cuisine)){
-				tfidf.put(ingredient, TfIdfCalculator.tfIdf(doc, docs, ingredient));
+			temp = TfIdfCalculator.tfIdf(cuisine, terms);
+			if( temp > bestResult) {
+				bestResult = temp;
+				bestCuisine = cuisine;
 			}
+		
 		}
 		
-		return null;
-		
 	}
+
+
+	public String getBestCuisine() {
+		return bestCuisine;
+	}
+
+
+
+	public double getBestResult() {
+		return bestResult;
+	}
+
 }

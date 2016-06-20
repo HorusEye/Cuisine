@@ -6,6 +6,10 @@ public class Main {
 		
 		Globals global = new Globals();
 		global.init();
+//		global.printLists();
+		
+		SubmissionGenerator.generateSubmissions();
+		
 		System.out.println("fin");
 	}
 
