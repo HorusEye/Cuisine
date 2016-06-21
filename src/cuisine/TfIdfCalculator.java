@@ -13,18 +13,20 @@ public class TfIdfCalculator {
 		// // result++;
 		// }
 
-		if (Globals.INGREDIENTS_PER_CUISINE_COUNT.containsKey(cuisine)
-				&& Globals.INGREDIENTS_PER_CUISINE_COUNT.get(cuisine)
-						.containsKey(term)) {
-			return Globals.INGREDIENTS_PER_CUISINE_COUNT.get(cuisine).get(term)
-					/ Globals.INGREDIENTS_PER_CUISINE.size();
-		} else {
-			return 0.01;
-		}
+//		if (Globals.INGREDIENTS_PER_CUISINE_COUNT.containsKey(cuisine)
+//				&& Globals.INGREDIENTS_PER_CUISINE_COUNT.get(cuisine)
+//						.containsKey(term)) {
+//			return (double)Globals.INGREDIENTS_PER_CUISINE_COUNT.get(cuisine).get(term)
+//					/ (double)Globals.INGREDIENTS_PER_CUISINE.size();
+//		} else {
+//			return 0.01;
+//		}
+		
+		return 0;
 	}
 
-	private static double idf(String term) {
-		double n = 0.01;
+	private static double idf(String cuisine, String term) {
+		double n = 0.1;
 		// for (List<String> doc : docs) {
 		// for (String word : doc) {
 		// if (term.equalsIgnoreCase(word)) {
@@ -34,21 +36,31 @@ public class TfIdfCalculator {
 		// }
 		// }
 
-		for (Entry<String, Map<String, Integer>> doc : Globals.INGREDIENTS_PER_CUISINE_COUNT
-				.entrySet()) {
-			if (doc.getValue().containsKey(term)) {
-				n++;
-			}
+//		for (Entry<String, Map<String, Integer>> doc : Globals.INGREDIENTS_PER_CUISINE_COUNT
+//				.entrySet()) {
+//			if (doc.getValue().containsKey(term)) {
+//				n+=1;
+//			}
+//		}
+//		return Math.log(((double) Globals.CUISINES.size()) / (double)n);
+		
+		if(Globals.INGREDIENTS_PER_CUISINE_COUNT.get(cuisine).containsKey(term)){
+			return Math.log(Globals.RECIPIES_PER_CUISINE_COUNT.get(cuisine)/(double)Globals.INGREDIENTS_PER_CUISINE_COUNT.get(cuisine).get(term));
+		}else{
+			return 0.01;
 		}
-		return Math.log(((double) Globals.CUISINES.size()) / n);
+		
+		
+	
 	}
 
 	public static double tfIdf(String cuisine, List<String> terms) {
 		double result = 1;
-		System.out.println(cuisine + "!!!!!!!!!!!!!");
+		//System.out.println(cuisine + "!!!!!!!!!!!!!");
 		for (String term : terms) {
-			System.out.println(tf(cuisine, term) + " * " +  idf(term));
-			result *= tf(cuisine, term) * idf(term);
+			//System.out.println(tf(cuisine, term) + " * " +  idf(term));
+//			result *= tf(cuisine, term) * idf(term);
+			result *= (1.0/(double)terms.size())*idf(cuisine,term);
 		}
 		return result;
 	}

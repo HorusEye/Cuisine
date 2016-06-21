@@ -1,2 +1,0 @@
-# Cuisine
-Data mining project

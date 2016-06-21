@@ -33,6 +33,7 @@ public class Globals {
 	// distinct ingredients and cuisines in train set
 	public static Set<String> ALL_INGREDIENTS;
 	public static Set<String> CUISINES;
+	public static Map<String, Double> RECIPIES_PER_CUISINE_COUNT;
 
 	// all duplicate ingredients for all cuisines
 	public static List<List<String>> INGREDIENTS_FOR_ALL_CUISINES;
@@ -129,6 +130,7 @@ public class Globals {
 		CUISINES = new HashSet<String>();
 		INGREDIENTS_FOR_ALL_CUISINES = new ArrayList<List<String>>();
 		INGREDIENTS_PER_CUISINE_COUNT = new HashMap<String, Map<String, Integer>>();
+		RECIPIES_PER_CUISINE_COUNT = new HashMap<String, Double>();
 
 		filterRecipes(TRAIN_CUISINE);
 
@@ -137,7 +139,12 @@ public class Globals {
 			List<String> ingredients = new ArrayList<String>();
 			ingredients.addAll(cuisine.getIngredients());
 			String cuisineName = cuisine.getCuisine();
-			;
+			
+			if(RECIPIES_PER_CUISINE_COUNT.containsKey(cuisineName)){
+				RECIPIES_PER_CUISINE_COUNT.put(cuisineName, RECIPIES_PER_CUISINE_COUNT.get(cuisineName) + 1);
+			}else{
+				RECIPIES_PER_CUISINE_COUNT.put(cuisineName, 1.0);
+			}
 
 			if (!INGREDIENTS_PER_CUISINE.containsKey(cuisineName)) {
 				INGREDIENTS_PER_CUISINE.put(cuisineName, ingredients);
@@ -145,7 +152,7 @@ public class Globals {
 				INGREDIENTS_PER_CUISINE.get(cuisineName).addAll(ingredients);
 			}
 
-			if (!INGREDIENTS_PER_CUISINE_COUNT.containsKey(cuisine)) {
+			if (!INGREDIENTS_PER_CUISINE_COUNT.containsKey(cuisineName)) {
 				INGREDIENTS_PER_CUISINE_COUNT.put(cuisineName,
 						new HashMap<String, Integer>());
 			}
@@ -167,6 +174,8 @@ public class Globals {
 			CUISINES.add(cuisine.getCuisine().toLowerCase().trim());
 			ALL_INGREDIENTS.addAll(ingredients);
 			INGREDIENTS_FOR_ALL_CUISINES.add(ingredients);
+			
+//			System.out.println(INGREDIENTS_PER_CUISINE_COUNT.toString());
 
 		}
 
