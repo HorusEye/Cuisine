@@ -25,6 +25,7 @@ public class SubmissionGenerator {
 			result.calculateVectors(cuisine.getIngredients());
 			String cuisineName =  result.getBestCuisine();
 			bw.append(cuisine.getId() + "," + cuisineName);
+//			break;
 		}
 		
 		bw.close();

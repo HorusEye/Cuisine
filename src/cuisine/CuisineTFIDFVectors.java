@@ -14,9 +14,13 @@ public class CuisineTFIDFVectors {
 	public  void calculateVectors(List<String> terms){
 		bestResult = 0;
 		double temp = 0;
-		
+		int k = 0;
 		for(String cuisine : Globals.CUISINES){
+			k++;
+			if(k==10) break;
+			
 			temp = TfIdfCalculator.tfIdf(cuisine, terms);
+			//System.out.println(cuisine  + " - " + temp);
 			if( temp > bestResult) {
 				bestResult = temp;
 				bestCuisine = cuisine;
