@@ -38,7 +38,9 @@ public class Globals {
 	// all duplicate ingredients for all cuisines
 	public static List<List<String>> INGREDIENTS_FOR_ALL_CUISINES;
 
-	public static Map<String, Map<String, Integer>> INGREDIENTS_PER_CUISINE_COUNT;
+	public static Map<String, Map<String, Double>> INGREDIENTS_PER_CUISINE_COUNT;
+	
+	public static Map<String, Double> IDFS;
 
 	public static void init() throws Exception {
 		initTestCuisines();
@@ -129,8 +131,9 @@ public class Globals {
 		ALL_INGREDIENTS = new HashSet<String>();
 		CUISINES = new HashSet<String>();
 		INGREDIENTS_FOR_ALL_CUISINES = new ArrayList<List<String>>();
-		INGREDIENTS_PER_CUISINE_COUNT = new HashMap<String, Map<String, Integer>>();
+		INGREDIENTS_PER_CUISINE_COUNT = new HashMap<String, Map<String, Double>>();
 		RECIPIES_PER_CUISINE_COUNT = new HashMap<String, Double>();
+		IDFS = new HashMap<String, Double>();
 
 		filterRecipes(TRAIN_CUISINE);
 
@@ -154,7 +157,7 @@ public class Globals {
 
 			if (!INGREDIENTS_PER_CUISINE_COUNT.containsKey(cuisineName)) {
 				INGREDIENTS_PER_CUISINE_COUNT.put(cuisineName,
-						new HashMap<String, Integer>());
+						new HashMap<String, Double>());
 			}
 
 			for (String ingredient : ingredients) {
@@ -166,7 +169,7 @@ public class Globals {
 									ingredient) + 1);
 				} else {
 					INGREDIENTS_PER_CUISINE_COUNT.get(cuisineName).put(
-							ingredient, 1);
+							ingredient, 1.0);
 				}
 
 			}
@@ -199,6 +202,12 @@ public class Globals {
 					+ entry.getValue().toString());
 		}
 
+	}
+	
+	public static void calculateIDF(){
+		for (String ingredient : ALL_INGREDIENTS) {
+			IDFS.put(ingredient, TfIdfCalculator.idf(ingredient));
+		}
 	}
 
 }

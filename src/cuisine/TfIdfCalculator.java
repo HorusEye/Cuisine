@@ -7,61 +7,48 @@ import java.util.Map.Entry;
 public class TfIdfCalculator {
 
 	private static double tf(String cuisine, String term) {
-		// double result = 0;
-		// for (String word : doc) {
-		// // if (term.equalsIgnoreCase(word))
-		// // result++;
-		// }
-
-//		if (Globals.INGREDIENTS_PER_CUISINE_COUNT.containsKey(cuisine)
-//				&& Globals.INGREDIENTS_PER_CUISINE_COUNT.get(cuisine)
-//						.containsKey(term)) {
-//			return (double)Globals.INGREDIENTS_PER_CUISINE_COUNT.get(cuisine).get(term)
-//					/ (double)Globals.INGREDIENTS_PER_CUISINE.size();
-//		} else {
-//			return 0.01;
-//		}
-		
+		if (Globals.INGREDIENTS_PER_CUISINE_COUNT.get(cuisine).containsKey(term)) {
+			return Globals.INGREDIENTS_PER_CUISINE_COUNT.get(cuisine).get(term)/(double)Globals.INGREDIENTS_PER_CUISINE.get(cuisine).size();
+		}
 		return 0;
 	}
 
-	private static double idf(String cuisine, String term) {
-		double n = 0.1;
-		// for (List<String> doc : docs) {
-		// for (String word : doc) {
-		// if (term.equalsIgnoreCase(word)) {
-		// n++;
-		// break;
-		// }
-		// }
-		// }
-
-//		for (Entry<String, Map<String, Integer>> doc : Globals.INGREDIENTS_PER_CUISINE_COUNT
-//				.entrySet()) {
-//			if (doc.getValue().containsKey(term)) {
-//				n+=1;
-//			}
-//		}
-//		return Math.log(((double) Globals.CUISINES.size()) / (double)n);
-		
-		if(Globals.INGREDIENTS_PER_CUISINE_COUNT.get(cuisine).containsKey(term)){
-			return Math.log(Globals.RECIPIES_PER_CUISINE_COUNT.get(cuisine)/(double)Globals.INGREDIENTS_PER_CUISINE_COUNT.get(cuisine).get(term));
-		}else{
-			return 0.01;
+	public static double idf(String term) {
+		double n = 0.0;
+		for (String cuisine : Globals.CUISINES) {
+			if (Globals.INGREDIENTS_PER_CUISINE_COUNT.get(cuisine).containsKey(term)) {
+				n = n +1;
+			}
+		} 
+		if (n>0) {
+			return 1 + Math.log((double)Globals.CUISINES.size()/n);
 		}
-		
-		
-	
+		return 1;
+//		if(Globals.INGREDIENTS_PER_CUISINE_COUNT.get(cuisine).containsKey(term)){
+//			return Math.log(Globals.RECIPIES_PER_CUISINE_COUNT.get(cuisine)/(double)Globals.INGREDIENTS_PER_CUISINE_COUNT.get(cuisine).get(term));
+//		}else{
+//			return 0.0;
+//		}
 	}
 
 	public static double tfIdf(String cuisine, List<String> terms) {
-		double result = 1;
-		//System.out.println(cuisine + "!!!!!!!!!!!!!");
+		double queryTF = (1.0/(double)terms.size());
+		double nominator = 0.0;
+		double denominatorPart1 = 0.0;
+		double denominatorPart2 = 0.0;
 		for (String term : terms) {
-			//System.out.println(tf(cuisine, term) + " * " +  idf(term));
-//			result *= tf(cuisine, term) * idf(term);
-			result *= (1.0/(double)terms.size())*idf(cuisine,term);
+			double idf = 0;
+			if (Globals.IDFS.containsKey(term)) {
+				idf = Globals.IDFS.get(term);
+			} else {
+				idf = 1;
+			}
+			double q = queryTF*idf;
+			double perCat = tf(cuisine, term)*idf;
+			nominator += (q)*(perCat);
+			denominatorPart1 += q*q;
+			denominatorPart2 += perCat*perCat;
 		}
-		return result;
+		return nominator/(Math.sqrt(denominatorPart1)*Math.sqrt(denominatorPart2));
 	}
 }
