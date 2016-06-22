@@ -8,7 +8,9 @@ public class Main {
 		global.init();
 //		global.printLists();
 		
-		SubmissionGenerator.generateSubmissions();
+		SubmissionGenerator.generateDataFile();
+		
+//		SubmissionGenerator.generateSubmissions();
 		
 		System.out.println("fin");
 	}

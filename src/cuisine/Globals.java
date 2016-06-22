@@ -43,7 +43,7 @@ public class Globals {
 	public static Map<String, Double> IDFS;
 
 	public static void init() throws Exception {
-		initTestCuisines();
+//		initTestCuisines();
 		initTrainCuisines();
 
 	}

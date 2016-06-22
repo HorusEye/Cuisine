@@ -8,4 +8,6 @@ public class Constants {
 	public static final String TEST_CUISINE_PATH = "./_DATA/test.json";
 
 	public static final String SUBMISSION_PATH = "./submission.csv";
+	
+	public static final String DATA_FILE_PATH = "./data.txt";
 }
