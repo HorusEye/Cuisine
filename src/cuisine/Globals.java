@@ -43,7 +43,7 @@ public class Globals {
 	public static Map<String, Double> IDFS;
 
 	public static void init() throws Exception {
-		initTestCuisines();
+ 		initTestCuisines();
 		initTrainCuisines();
 
 	}
@@ -90,7 +90,9 @@ public class Globals {
 			List<String> separateWords = Arrays.asList(ingredient.split(" "));
 			for (String word : separateWords) {
 				word = word.replaceAll("\\s*", "");
-				result.add(word);
+				if(!word.equals("")){
+					result.add(word);
+				}
 			}
 
 		}
@@ -181,6 +183,8 @@ public class Globals {
 //			System.out.println(INGREDIENTS_PER_CUISINE_COUNT.toString());
 
 		}
+		
+		calculateIDF();
 
 	}
 
