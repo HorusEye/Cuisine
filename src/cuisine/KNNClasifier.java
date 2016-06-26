@@ -31,6 +31,7 @@ public class KNNClasifier {
 		BufferedReader dataFile = readDataFile(fileName);
 
 		Instances data = new Instances(dataFile);
+		data.setClassIndex(data.numAttributes() - 1);
 
 		return data;
 	}
@@ -40,7 +41,7 @@ public class KNNClasifier {
 
 		data = new Instances(dataFile);
 		data.setClassIndex(data.numAttributes() - 1);
-
+		System.out.println("class ready");
 		Classifier ibk = new IBk();
 		ibk.buildClassifier(data);
 

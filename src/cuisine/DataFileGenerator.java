@@ -27,15 +27,13 @@ public class DataFileGenerator {
 			for(String ingredient : ingredientsSorted){
 				if(listIngr.contains(ingredient)){
 					//skip ingrediets missing from train data in the instance
-					if(Globals.ALL_INGREDIENTS.contains(ingredient)){
 						instance+="1,";
-					}
 				}else{
 					instance+="0,";
 				}
 			}
 			
-			instance = instance.substring(0, instance.length()-1);
+			instance +="?";
 		
 		return instance;
 	}
@@ -51,7 +49,7 @@ public class DataFileGenerator {
 	}
 	
 	public static String classAnotation(Set<String> cuisines){
-		String classes = "@attribute cuisine {";
+		String classes = "@attribute class {";
 		
 		for(String cuisine : cuisines.toArray(new String[cuisines.size()])){
 			classes += cuisine + ", ";
