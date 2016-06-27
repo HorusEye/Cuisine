@@ -12,10 +12,10 @@ public class Main {
 //		global.printLists();
 		
 		
-		
+		SubmissionGenerator.generateSVMFIle();
 //		SubmissionGenerator.generateDataFile();
 		
-		SubmissionGenerator.generateSubmissionsKNN();
+//		SubmissionGenerator.generateSubmissionsTFIDF();
 		
 		System.out.println("fin");
 	}

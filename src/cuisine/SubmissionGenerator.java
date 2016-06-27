@@ -3,8 +3,14 @@ package cuisine;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
+import edu.berkeley.compbio.jlibsvm.SVM;
+import edu.berkeley.compbio.jlibsvm.binary.C_SVC;
 import weka.classifiers.Classifier;
 import weka.core.Instances;
 
@@ -63,6 +69,8 @@ public class SubmissionGenerator {
 	}
 	
 	
+	
+	
 	public static void generateDataFile() throws Exception {
 		System.out.println("Generate dataFile");
 		
@@ -94,5 +102,45 @@ public class SubmissionGenerator {
 
 		
 		bw.close();
+	}
+	
+	public static void generateSVMFIle(){
+		try(FileWriter fw = new FileWriter("submit_svm_test.txt", true);
+				BufferedWriter bw = new BufferedWriter(fw);
+			    PrintWriter out = new PrintWriter(bw)){
+			
+			String[] ingredientsSorted = Globals.ALL_INGREDIENTS.toArray(new String[Globals.ALL_INGREDIENTS.size()]);
+			Arrays.sort(ingredientsSorted);
+			Map<String,Integer> ingredients = new HashMap<String, Integer>();	
+			for (int i = 1; i < ingredientsSorted.length; i++){
+				ingredients.put(ingredientsSorted[i-1], i);
+			}
+			String[] cuisinesList = Globals.CUISINES.toArray(new String[Globals.CUISINES.size()]);
+			Map<String,Integer> cuisines = new HashMap<String, Integer>();	
+			
+			for (int i = 1; i < cuisinesList.length; i++) {
+				cuisines.put(cuisinesList[i-1], i);
+			}
+			
+			
+			for (Cuisine cuisine : Globals.TEST_CUISINE) {
+//				out.print(cuisines.get(cuisine.getCuisine()) + " ");
+				
+				for (String ingr : cuisine.getIngredients()) {
+					if (Globals.ALL_INGREDIENTS.contains(ingr)) {
+						out.print(ingredients.get(ingr)+":1 ");
+					}
+				}
+				out.println();
+			}
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static void generateSubmissionsSVM(){
+		
 	}
 }
