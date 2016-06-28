@@ -12,7 +12,8 @@ public class Main {
 //		global.printLists();
 		
 		
-		SubmissionGenerator.generateSVMFIle();
+//		SubmissionGenerator.generateSVMFIle();
+		SubmissionGenerator.generateSubmissionsSVM();
 //		SubmissionGenerator.generateDataFile();
 		
 //		SubmissionGenerator.generateSubmissionsTFIDF();

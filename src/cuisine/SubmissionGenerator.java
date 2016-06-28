@@ -112,18 +112,21 @@ public class SubmissionGenerator {
 			String[] ingredientsSorted = Globals.ALL_INGREDIENTS.toArray(new String[Globals.ALL_INGREDIENTS.size()]);
 			Arrays.sort(ingredientsSorted);
 			Map<String,Integer> ingredients = new HashMap<String, Integer>();	
-			for (int i = 1; i < ingredientsSorted.length; i++){
+			for (int i = 1; i < ingredientsSorted.length +1; i++){
 				ingredients.put(ingredientsSorted[i-1], i);
 			}
 			String[] cuisinesList = Globals.CUISINES.toArray(new String[Globals.CUISINES.size()]);
 			Map<String,Integer> cuisines = new HashMap<String, Integer>();	
 			
-			for (int i = 1; i < cuisinesList.length; i++) {
+			for (int i = 1; i < cuisinesList.length + 1; i++) {
 				cuisines.put(cuisinesList[i-1], i);
 			}
 			
 			
 			for (Cuisine cuisine : Globals.TEST_CUISINE) {
+				if (cuisines.get(cuisine.getCuisine()) ==null) {
+					System.out.println();
+				}
 //				out.print(cuisines.get(cuisine.getCuisine()) + " ");
 				
 				for (String ingr : cuisine.getIngredients()) {
@@ -141,6 +144,13 @@ public class SubmissionGenerator {
 	}
 	
 	public static void generateSubmissionsSVM(){
-		
+		SVMClassifier svm = new SVMClassifier();
+		String[] arr = new String[]{"svm_train.txt", "svm_model"};
+		try {
+			svm.run(arr);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
