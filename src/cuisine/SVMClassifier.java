@@ -16,7 +16,6 @@ import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.Vector;
 
-import edu.berkeley.compbio.jlibsvm.legacyexec.svm_train;
 import libsvm.svm_parameter;
 import libsvm.svm_problem;
 
