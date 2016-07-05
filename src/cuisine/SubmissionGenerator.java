@@ -9,8 +9,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.berkeley.compbio.jlibsvm.SVM;
-import edu.berkeley.compbio.jlibsvm.binary.C_SVC;
 import weka.classifiers.Classifier;
 import weka.core.Instances;
 
@@ -105,7 +103,7 @@ public class SubmissionGenerator {
 	}
 	
 	public static void generateSVMFIle(){
-		try(FileWriter fw = new FileWriter("submit_svm_test.txt", true);
+		try(FileWriter fw = new FileWriter("svm_test.txt", true);
 				BufferedWriter bw = new BufferedWriter(fw);
 			    PrintWriter out = new PrintWriter(bw)){
 			
@@ -124,10 +122,9 @@ public class SubmissionGenerator {
 			
 			
 			for (Cuisine cuisine : Globals.TEST_CUISINE) {
-				if (cuisines.get(cuisine.getCuisine()) ==null) {
-					System.out.println();
-				}
-//				out.print(cuisines.get(cuisine.getCuisine()) + " ");
+
+				//out.print(cuisines.get(cuisine.getCuisine()) + " ");
+				out.print("0 ");
 				
 				for (String ingr : cuisine.getIngredients()) {
 					if (Globals.ALL_INGREDIENTS.contains(ingr)) {
@@ -145,9 +142,18 @@ public class SubmissionGenerator {
 	
 	public static void generateSubmissionsSVM(){
 		SVMClassifier svm = new SVMClassifier();
-		String[] arr = new String[]{"svm_train.txt", "svm_model"};
+		String[] arr = new String[]{"-t", "2", "-d", "3", "-g", "1", "-r", "1", "-c", "100", "-h", "0", "-q","svm_train.txt", "svm_model"};
 		try {
 			svm.run(arr);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		SVMPredict predict = new SVMPredict();
+		String[] arr2 = new String[]{"svm_test.txt", "svm_model", "result_svm.csv"};
+		try {
+			predict.run(arr2);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

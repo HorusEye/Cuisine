@@ -7,10 +7,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import libsvm.*;
-import edu.berkeley.compbio.jlibsvm.legacyexec.svm_predict;
 
 public class SVMPredict {
 
@@ -46,6 +50,17 @@ public class SVMPredict {
 
 	private static void predict(BufferedReader input, DataOutputStream output, svm_model model, int predict_probability) throws IOException
 	{
+		List<String> ids = new ArrayList<String>();
+		for (Cuisine cus : Globals.TEST_CUISINE){
+			ids.add(String.valueOf(cus.getId()));
+		}
+		String[] cuisinesList = Globals.CUISINES.toArray(new String[Globals.CUISINES.size()]);
+		Map<String,Integer> cuisines = new HashMap<String, Integer>();	
+		Map<Integer, String> rev = new HashMap<Integer, String>();
+		for (int i = 1; i < cuisinesList.length + 1; i++) {
+			cuisines.put(cuisinesList[i-1], i);
+			rev.put(i, cuisinesList[i-1]);
+		}
 		int correct = 0;
 		int total = 0;
 		double error = 0;
@@ -73,6 +88,7 @@ public class SVMPredict {
 				output.writeBytes("\n");
 			}
 		}
+		int i = 0;
 		while(true)
 		{
 			String line = input.readLine();
@@ -102,7 +118,8 @@ public class SVMPredict {
 			else
 			{
 				v = svm.svm_predict(model,x);
-				output.writeBytes(v+"\n");
+				output.writeBytes(ids.get(i)+","+rev.get((int)v)+"\n");
+				i++;
 			}
 
 			if(v == target)
@@ -138,7 +155,7 @@ public class SVMPredict {
 		System.exit(1);
 	}
 
-	public static void main(String argv[]) throws IOException
+	public void run(String argv[]) throws IOException
 	{
 		int i, predict_probability=0;
         	svm_print_string = svm_print_stdout;
