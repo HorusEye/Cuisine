@@ -326,6 +326,6 @@ public class SVMClassifier {
 			}
 
 		fp.close();
-	}	
+	}		
 }
 
